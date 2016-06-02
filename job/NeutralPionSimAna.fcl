@@ -1,0 +1,42 @@
+#include "geometry_microboone.fcl"
+#include "messageservice.fcl"
+#include "simulationservices_microboone.fcl"
+#include "mctools_microboone.fcl"
+
+process_name: NeutralPionSimAna
+
+services:
+{
+  TFileService:           { fileName: "NeutralPionSimAna.root" }
+  TimeTracker:            {}
+  message:                @local::standard_info
+  Geometry:               @local::microboone_geo
+  ExptGeoHelperInterface: @local::microboone_geometry_helper
+  LArG4Parameters:        @local::microboone_largeantparameters
+}
+
+source:
+{
+  module_type: RootInput
+  maxEvents:  -1 
+}
+
+outputs:{}
+
+physics:
+{
+  analyzers:
+  {
+    NeutralPionSimAna: 
+    {
+      module_type:     "NeutralPionSimAna"
+      SimulationLabel: "largeant"
+      MCTools:         @local::microboone_mctools
+    }
+  }
+
+  analysis: [ NeutralPionSimAna ]
+
+  end_paths: [ analysis ]
+}
+
